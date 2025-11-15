@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Clicker Fullscreen Smooth Ring</title>
+<style>
+html, body {
+    margin:0; padding:0; height:100%; width:100%;
+    display:flex; justify-content:center; align-items:center; background:white;
+}
+.container { display:flex; flex-direction:column; align-items:center; }
+.button-wrapper { position:relative; width:250px; height:250px; }
+#cookie-btn {
+    font-size:200px; border:none; background-color:orange; border-radius:50%;
+    width:250px; height:250px; cursor:pointer; position:relative; z-index:1;
+}
+.progress-ring {
+    position:absolute; top:0; left:0;
+    width:250px; height:250px;
+    border-radius:50%; transform:rotate(-90deg);
+    z-index:0;
+}
+.progress-ring circle {
+    stroke:#FFA500;
+    stroke-width:10;
+    fill:transparent;
+    stroke-dasharray: 0 1000;
+    transition: stroke-dashoffset 0.2s linear;
+}
+#cookie-count, #cps-count {
+    font-family:sans-serif; font-size:24px; margin-top:10px; text-align:center;
+}
+.upgrade-btn { margin-top:15px; padding:10px 20px; font-size:18px; border-radius:5px; border:none; cursor:pointer; font-weight:bold; }
+.auto { background-color:#4CAF50; color:white; }
+.click { background-color:#2196F3; color:white; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="button-wrapper">
+        <svg class="progress-ring" width="250" height="250">
+            <circle cx="125" cy="125" r="115"/>
+        </svg>
+        <button id="cookie-btn">🍪</button>
+    </div>
+    <div>Cookies: <span id="cookie-count">0</span></div>
+    <div>Cookies Per Second: <span id="cps-count">0</span></div>
+    <button id="auto-upgrade" class="upgrade-btn auto">Buy Auto Clicker (10 cookies)</button>
+    <button id="click-upgrade" class="upgrade-btn click">Upgrade Click (+5) (20 cookies)</button>
+</div>
+
+<script>
+let cookies = 0;
+let autoClickers = 0;
+let cookiesPerClick = 1;
+let autoPrice = 10;
+let clickUpgradePrice = 20;
+
+const countDisplay = document.getElementById('cookie-count');
+const cpsDisplay = document.getElementById('cps-count');
+const cookieBtn = document.getElementById('cookie-btn');
+const autoBtn = document.getElementById('auto-upgrade');
+const clickBtn = document.getElementById('click-upgrade');
+
+const circle = document.querySelector('.progress-ring circle');
+const radius = circle.r.baseVal.value;
+const circumference = 2 * Math.PI * radius;
+circle.style.strokeDasharray = `${circumference} ${circumference}`;
+circle.style.strokeDashoffset = circumference;
+
+let progress = 0;
+
+// Smooth progress update
+function setProgress(percent) {
+    const offset = circumference - (percent / 100) * circumference;
+    circle.style.strokeDashoffset = offset;
+}
+
+// Update CPS
+function updateCPS() {
+    cpsDisplay.textContent = autoClickers;
+}
+
+// Cookie click
+cookieBtn.addEventListener('click', () => {
+    cookies += cookiesPerClick;
+    countDisplay.textContent = cookies;
+    progress += 10; 
+    if(progress > 100) progress = 100;
+    setProgress(progress);
+});
+
+// Buy auto-clicker
+autoBtn.addEventListener('click', () => {
+    if(cookies >= autoPrice){
+        cookies -= autoPrice;
+        autoClickers++;
+        autoPrice = Math.floor(autoPrice * 1.5);
+        autoBtn.textContent = `Buy Auto Clicker (${autoPrice} cookies)`;
+        countDisplay.textContent = cookies;
+        updateCPS();
+    }
+});
+
+// Buy click upgrade
+clickBtn.addEventListener('click', () => {
+    if(cookies >= clickUpgradePrice){
+        cookies -= clickUpgradePrice;
+        cookiesPerClick += 5;
+        clickUpgradePrice = Math.floor(clickUpgradePrice * 2);
+        clickBtn.textContent = `Upgrade Click (+5) (${clickUpgradePrice} cookies)`;
+        countDisplay.textContent = cookies;
+    }
+});
+
+// Auto-clicker loop
+setInterval(() => {
+    if(autoClickers > 0){
+        cookies += autoClickers;
+        countDisplay.textContent = cookies;
+
+        progress += autoClickers * 2; 
+        if(progress > 100) progress = 0;
+        setProgress(progress);
+    }
+}, 1000);
+
+updateCPS();
+</script>
+</body>
+</html>
