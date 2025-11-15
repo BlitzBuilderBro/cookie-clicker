@@ -12,9 +12,16 @@ html, body {
 .container { display:flex; flex-direction:column; align-items:center; }
 .button-wrapper { position:relative; width:250px; height:250px; }
 #cookie-btn {
-    font-size:200px; border:none; background-color:orange; border-radius:50%;
-    width:250px; height:250px; cursor:pointer; display:flex;
-    justify-content:center; align-items:center;
+    font-size:100px; 
+    background-color:orange; 
+    border:none; 
+    border-radius:50%;
+    width:250px; height:250px; 
+    cursor:pointer; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    box-shadow: 0 0 10px #FFA500;
 }
 #cookie-count, #cps-count {
     font-family:sans-serif; font-size:24px; margin-top:10px; text-align:center;
@@ -48,7 +55,6 @@ const cookieBtn = document.getElementById('cookie-btn');
 const autoBtn = document.getElementById('auto-upgrade');
 const clickBtn = document.getElementById('click-upgrade');
 
-// Update CPS display
 function updateCPS(){
     cpsDisplay.textContent = autoClickers;
 }
