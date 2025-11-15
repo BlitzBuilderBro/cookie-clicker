@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cookie Clicker Fullscreen Smooth Ring</title>
+<title>Cookie Clicker Simplified</title>
 <style>
 html, body {
     margin:0; padding:0; height:100%; width:100%;
@@ -13,20 +13,8 @@ html, body {
 .button-wrapper { position:relative; width:250px; height:250px; }
 #cookie-btn {
     font-size:200px; border:none; background-color:orange; border-radius:50%;
-    width:250px; height:250px; cursor:pointer; position:relative; z-index:1;
-}
-.progress-ring {
-    position:absolute; top:0; left:0;
-    width:250px; height:250px;
-    border-radius:50%; transform:rotate(-90deg);
-    z-index:0;
-}
-.progress-ring circle {
-    stroke:#FFA500;
-    stroke-width:10;
-    fill:transparent;
-    stroke-dasharray: 0 1000;
-    transition: stroke-dashoffset 0.2s linear;
+    width:250px; height:250px; cursor:pointer; display:flex;
+    justify-content:center; align-items:center;
 }
 #cookie-count, #cps-count {
     font-family:sans-serif; font-size:24px; margin-top:10px; text-align:center;
@@ -39,9 +27,6 @@ html, body {
 <body>
 <div class="container">
     <div class="button-wrapper">
-        <svg class="progress-ring" width="250" height="250">
-            <circle cx="125" cy="125" r="115"/>
-        </svg>
         <button id="cookie-btn">🍪</button>
     </div>
     <div>Cookies: <span id="cookie-count">0</span></div>
@@ -63,22 +48,8 @@ const cookieBtn = document.getElementById('cookie-btn');
 const autoBtn = document.getElementById('auto-upgrade');
 const clickBtn = document.getElementById('click-upgrade');
 
-const circle = document.querySelector('.progress-ring circle');
-const radius = circle.r.baseVal.value;
-const circumference = 2 * Math.PI * radius;
-circle.style.strokeDasharray = `${circumference} ${circumference}`;
-circle.style.strokeDashoffset = circumference;
-
-let progress = 0;
-
-// Smooth progress update
-function setProgress(percent) {
-    const offset = circumference - (percent / 100) * circumference;
-    circle.style.strokeDashoffset = offset;
-}
-
-// Update CPS
-function updateCPS() {
+// Update CPS display
+function updateCPS(){
     cpsDisplay.textContent = autoClickers;
 }
 
@@ -86,9 +57,6 @@ function updateCPS() {
 cookieBtn.addEventListener('click', () => {
     cookies += cookiesPerClick;
     countDisplay.textContent = cookies;
-    progress += 10; 
-    if(progress > 100) progress = 100;
-    setProgress(progress);
 });
 
 // Buy auto-clicker
@@ -119,10 +87,6 @@ setInterval(() => {
     if(autoClickers > 0){
         cookies += autoClickers;
         countDisplay.textContent = cookies;
-
-        progress += autoClickers * 2; 
-        if(progress > 100) progress = 0;
-        setProgress(progress);
     }
 }, 1000);
 
